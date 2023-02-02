@@ -1,9 +1,9 @@
-#################¼³Ä¡ÇØ¾ßÇÒ ÆĞÅ°Áö################
-# µ¥ÀÌÅÍ »êÁ¡µµ
+#################ì„¤ì¹˜í•´ì•¼í•  íŒ¨í‚¤ì§€################
+# ë°ì´í„° ì‚°ì ë„
 
 install.packages("ggplot2")
 
-# cross table (ºĞ·ù±â¿¡ »ç¿ë)
+# cross table (ë¶„ë¥˜ê¸°ì— ì‚¬ìš©)
 install.packages("gmodels")
 
 
@@ -11,16 +11,16 @@ install.packages("gmodels")
 install.packages("caret") 
 
 
-# ³ªÀÌºê º£ÀÌÁî
+# ë‚˜ì´ë¸Œ ë² ì´ì¦ˆ
 install.packages("e1071")
 
-# cart ¾Ë°í¸®Áò Áö¿ø
+# cart ì•Œê³ ë¦¬ì¦˜ ì§€ì›
 install.packages("rpart")
 
-# ÀÇ»ç °áÁ¤ Æ®¸® ±×·¡ÇÁ ±×¸®±â
+# ì˜ì‚¬ ê²°ì • íŠ¸ë¦¬ ê·¸ë˜í”„ ê·¸ë¦¬ê¸°
 install.packages("rattle")
 
-# ÀÇ»ç°áÁ¤ Æ®¸® ¸ğµ¨À» ¸¸µé¾îÁÖ´Â ÇÔ¼ö
+# ì˜ì‚¬ê²°ì • íŠ¸ë¦¬ ëª¨ë¸ì„ ë§Œë“¤ì–´ì£¼ëŠ” í•¨ìˆ˜
 install.packages("rpart.plot")
 
 
@@ -28,7 +28,7 @@ install.packages("rpart.plot")
 install.packages("adabag") 
 
 
-# ¿¬°ü ±ÔÄ¢ ÆĞÅ°Áö
+# ì—°ê´€ ê·œì¹™ íŒ¨í‚¤ì§€
 install.packages("arules")
 
 
@@ -46,13 +46,13 @@ install.packages("arules")
   library(arules)
 }
 
-### µ¥ÀÌÅÍ Á¤¸® ###
+### ë°ì´í„° ì •ë¦¬ ###
 
 
-#¿øµ¥ÀÌÅÍ ºÒ·¯¿À±â 
-dong_data <- read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(400).csv", header=TRUE)
+#ì›ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸° 
+dong_data <- read.csv("ë™_ë°ì´í„°_ì¢…í•©(400).csv", header=TRUE)
 
-#¿øµ¥ÀÌÅÍ Á¤±ÔÈ­
+#ì›ë°ì´í„° ì •ê·œí™”
 normalize <- function(x){
   num <- x-min(x)
   denom <- max(x)-min(x)
@@ -61,42 +61,42 @@ normalize <- function(x){
 
 norm_dong <- dong_data
 norm_dong[,c(-1,-2)] <- as.data.frame(lapply(norm_dong[,c(-1,-2)], normalize))
-norm_dong$µ¿<-NULL
+norm_dong$ë™<-NULL
 norm_dong$label<-as.factor(norm_dong$label)
 
 
-#Á¤±ÔÈ­2 : norm_dong_data (cart tree¿¡ ÇÊ¿ä)
+#ì •ê·œí™”2 : norm_dong_data (cart treeì— í•„ìš”)
 norm_dong_data_all <- norm_dong
 norm_dong_data_all[,c(-1,-2)]<-as.data.frame(lapply(norm_dong_data_all[,c(-1,-2)], normalize))
-set.seed(1234) #½Ãµå°ª: ³­¼ö »ı¼º½Ã Ã³À½ ½ÃÀÛ°ªÀ» ÁÖ¾î ¸Å¹ø °°Àº °ªÀÌ ³ª¿À°Ô ¸¸µê 
-##1. ·£´ı »ùÇÃ(7:3)
+set.seed(1234) #ì‹œë“œê°’: ë‚œìˆ˜ ìƒì„±ì‹œ ì²˜ìŒ ì‹œì‘ê°’ì„ ì£¼ì–´ ë§¤ë²ˆ ê°™ì€ ê°’ì´ ë‚˜ì˜¤ê²Œ ë§Œë“¦ 
+##1. ëœë¤ ìƒ˜í”Œ(7:3)
 ind <- sample(2, nrow(norm_dong_data_all), replace=TRUE, prob=c(0.7, 0.3))
-##2. ÇĞ½Àµ¥ÀÌÅÍ, Å×½ºÆÃ µ¥ÀÌÅÍ
+##2. í•™ìŠµë°ì´í„°, í…ŒìŠ¤íŒ… ë°ì´í„°
 subway.training <- norm_dong_data_all[ind==1,]
 subway.test <- norm_dong_data_all[ind==2,]
-subway.trainLabels <- norm_dong_data_all[ind==1,2] #label Á¤º¸ ÁöÁ¤ (label Á¤º¸´Â 2¹ø ¼Ó¼º¿¡ ÀÖÀ½)
+subway.trainLabels <- norm_dong_data_all[ind==1,2] #label ì •ë³´ ì§€ì • (label ì •ë³´ëŠ” 2ë²ˆ ì†ì„±ì— ìˆìŒ)
 subway.testLabels <- norm_dong_data_all[ind==2,2]
 
 
 
 ######################## k-means clustering ########################
-######## µ¿µ¥ÀÌÅÍ Å¬·¯½ºÅÍ¸µ  
-#1. k°ª ±¸ÇÏ±â - elbow point
+######## ë™ë°ì´í„° í´ëŸ¬ìŠ¤í„°ë§  
+#1. kê°’ êµ¬í•˜ê¸° - elbow point
 wss<-0
 for(i in 1:15){
   wss[i] <-sum(kmeans(norm_dong[,-1], centers = i) $ withinss)
 }
 plot(1:15, wss, type = "b", xlab = "Clusters #", ylab = "Within group sum of squares")
-#2. k-means ½ÇÇà 
+#2. k-means ì‹¤í–‰ 
 dong.kmeans<-kmeans(norm_dong[,-1], centers = 4)
-#3. k°ªÀ» Åä´ë·Î ¶óº§¸µ (¶óº§Ãß°¡ÀÛ¾÷) 
+#3. kê°’ì„ í† ëŒ€ë¡œ ë¼ë²¨ë§ (ë¼ë²¨ì¶”ê°€ì‘ì—…) 
 dong.label <- order(dong.kmeans$cluster)
 names(dong_data)[2]<-c("label")
 dong_data$label<-as.factor(dong_data$label)
 
-######## ±¸µ¥ÀÌÅÍ Å¬·¯½ºÅÍ¸µ
-#1. ±¸µ¥ÀÌÅÍ ºÒ·¯¿À±â + Á¤±ÔÈ­ 
-gu_data <- read.csv("¼­¿ï½Ã_ÀÚÄ¡±¸º°_µ¥ÀÌÅÍ.csv", header=TRUE)
+######## êµ¬ë°ì´í„° í´ëŸ¬ìŠ¤í„°ë§
+#1. êµ¬ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸° + ì •ê·œí™” 
+gu_data <- read.csv("ì„œìš¸ì‹œ_ìì¹˜êµ¬ë³„_ë°ì´í„°.csv", header=TRUE)
 norm_gu <- gu_data
 norm_gu[,c(-1,-2)] <- as.data.frame(lapply(norm_gu[,c(-1,-2)], normalize))
 
@@ -104,133 +104,133 @@ gu_data2 <- gu_data
 gu_data2[,-1] <- as.data.frame(lapply(gu_data2[,-1], normalize))
 gu_kmeans22 <- kmeans(gu_data[,-1], centers=5)
 gu_kmeans22$cluster
-#2. k°ª ±¸ÇÏ±â - elbow point 
+#2. kê°’ êµ¬í•˜ê¸° - elbow point 
 wss2 <- 0
 for(i in 1:15){
   wss2[i] <- sum(kmeans(norm_gu[,-1], centers = i)$withinss)
 }
 plot(1:15, wss2, type="b", xlab="Clusters #", ylab="Within group sum of squares")
-#3. k-means ½ÇÇà 
+#3. k-means ì‹¤í–‰ 
 gu.kmeans <- kmeans(norm_gu[,10], centers = 5)
-#4. k°ª Åä´ë·Î ¶óº§¸µ (¶óº§Ãß°¡ÀÛ¾÷)
+#4. kê°’ í† ëŒ€ë¡œ ë¼ë²¨ë§ (ë¼ë²¨ì¶”ê°€ì‘ì—…)
 gu.label <- order(gu.kmeans$cluster)
 names(gu_data)[2] <- c("label")
 gu_data$label <- as.factor(gu_data$label)
 
 
-# Å¬·¯½ºÅÍ¸µ 1Â÷ °á°ú ºÒ·¯¿À±â
-clustered_1st_raw_data<-read.csv("Å¬·¯½ºÅÍ¸µ1Â÷_°á°ú.csv",header=TRUE)
-# dongµ¥ÀÌÅÍ ¶óº§¸µ
+# í´ëŸ¬ìŠ¤í„°ë§ 1ì°¨ ê²°ê³¼ ë¶ˆëŸ¬ì˜¤ê¸°
+clustered_1st_raw_data<-read.csv("í´ëŸ¬ìŠ¤í„°ë§1ì°¨_ê²°ê³¼.csv",header=TRUE)
+# dongë°ì´í„° ë¼ë²¨ë§
 normalize <- function(x){
   num <- x-min(x)
   denom <- max(x)-min(x)
   return(num/denom)
 }
 
-dong.training<-read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(325).csv",header=TRUE)
+dong.training<-read.csv("ë™_ë°ì´í„°_ì¢…í•©(325).csv",header=TRUE)
 dong.training.norm<-dong.training
 dong.training.norm[,c(-1,-2)]<-as.data.frame(lapply(dong.training[,c(-1,-2)], normalize))
-dong.training.norm$µ¿<-NULL
-dong.testing<-read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(75).csv",header=TRUE)
+dong.training.norm$ë™<-NULL
+dong.testing<-read.csv("ë™_ë°ì´í„°_ì¢…í•©(75).csv",header=TRUE)
 dong.testing.norm<-dong.testing
 dong.testing.norm[,c(-1,-2)]<-as.data.frame(lapply(dong.testing[,c(-1,-2)], normalize))
-dong.testing.norm$µ¿<-NULL
+dong.testing.norm$ë™<-NULL
 dong.training.norm$label<-as.factor(dong.training.norm$label)
 dong.testing.norm$label<-as.factor(dong.testing.norm$label)
 
-######################## ¶óº§¸µ ÀÛ¾÷ ÀÌÈÄ ########################
-#train&test µ¥ÀÌÅÍ ºÒ·¯¿À±â 
-dong_train <- read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(325).csv",header=TRUE)
-dong_test <- read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(75).csv", header=TRUE)
+######################## ë¼ë²¨ë§ ì‘ì—… ì´í›„ ########################
+#train&test ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸° 
+dong_train <- read.csv("ë™_ë°ì´í„°_ì¢…í•©(325).csv",header=TRUE)
+dong_test <- read.csv("ë™_ë°ì´í„°_ì¢…í•©(75).csv", header=TRUE)
 
-#Á¤±ÔÈ­
+#ì •ê·œí™”
 norm_dong_train <- dong_train
 norm_dong_train[,c(-1,-2)] <- as.data.frame(lapply(norm_dong_train[,c(-1,-2)], normalize))
-norm_dong_train$µ¿<-NULL
+norm_dong_train$ë™<-NULL
 norm_dong_train$label<-as.factor(norm_dong_train$label)
 
 norm_dong_test <- dong_test 
 norm_dong_test[,c(-1,-2)] <- as.data.frame(lapply(norm_dong_test[,c(-1,-2)], normalize))
-norm_dong_test$µ¿<-NULL
+norm_dong_test$ë™<-NULL
 norm_dong_test$label<-as.factor(norm_dong_test$label)
 
 ####ORIGINAL_DONG_DATA_SAMPLE####
 
-# Å¬·¯½ºÅÍ °á°ú (µ¿µ¥ÀÌÅÍ)
-dong_clustering<-read.csv("»ùÇÃ_µ¿_Å¬·¯½ºÅÍ¸µ.csv",header=TRUE)
+# í´ëŸ¬ìŠ¤í„° ê²°ê³¼ (ë™ë°ì´í„°)
+dong_clustering<-read.csv("ìƒ˜í”Œ_ë™_í´ëŸ¬ìŠ¤í„°ë§.csv",header=TRUE)
 
-# µ¿µ¥ÀÌÅÍ
-original_dong_data<-read.csv("»ùÇÃ_µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ.csv",header=TRUE)
+# ë™ë°ì´í„°
+original_dong_data<-read.csv("ìƒ˜í”Œ_ë™_ë°ì´í„°_ì¢…í•©.csv",header=TRUE)
 str(original_dong_data)
 
-#  ¶óº§ Ãß°¡(¶óº§Àº 5)
+#  ë¼ë²¨ ì¶”ê°€(ë¼ë²¨ì€ 5)
 original_dong_data<-cbind(original_dong_data,dong_clustering[,5]) 
 names(original_dong_data)[19]<-c("label")
 
-#  factor ÁöÁ¤ 
+#  factor ì§€ì • 
 original_dong_data$label<-as.factor(original_dong_data$label)
 
-# µ¥ÀÌÅÍ º¹»ç
+# ë°ì´í„° ë³µì‚¬
 ORIGINAL_DONG_DATA<-original_dong_data
 str(ORIGINAL_DONG_DATA)
 
 #####ORIGINAL_DONG_DATA_ALLn#####
 
-# Á¤±ÔÈ­  ORIGINAL_DONG_DATA
+# ì •ê·œí™”  ORIGINAL_DONG_DATA
 ORIGINAL_SAMPLE_DATA[,c(-1,-2,-19)]<-as.data.frame(lapply(ORIGINAL_SAMPLE_DATA[,c(-1,-2,-19)], normalize))
 
 #cor(original_dong_data[,c(-1,-2,-21)])
 NORM_SAMPLE_DATA<-ORIGINAL_SAMPLE_DATA
 
-#####µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(400)#####
-rawData<-read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(325).csv",header=TRUE)
+#####ë™_ë°ì´í„°_ì¢…í•©(400)#####
+rawData<-read.csv("ë™_ë°ì´í„°_ì¢…í•©(325).csv",header=TRUE)
 str(rawData)
 
-# ¶óº§ Ãß°¡
+# ë¼ë²¨ ì¶”ê°€
 names(rawData)[2]<-c("label")
 
-#  factor ÁöÁ¤ 
+#  factor ì§€ì • 
 rawData$label<-as.factor(rawData$label)
 
-# µ¥ÀÌÅÍ copy
+# ë°ì´í„° copy
 ORIGINAL_DONG_DATA_ALL<-rawData
 NORM_DONG_DATA_ALL<-ORIGINAL_DONG_DATA_ALL
 
-# Á¤±ÔÈ­ : norm_dong_data
+# ì •ê·œí™” : norm_dong_data
 NORM_DONG_DATA_ALL[,c(-1,-2)]<-as.data.frame(lapply(NORM_DONG_DATA_ALL[,c(-1,-2)], normalize))
 
-NORM_DONG_DATA_ALL$µ¿<-NULL
-ORIGINAL_DONG_DATA_ALL$µ¿<-NULL
+NORM_DONG_DATA_ALL$ë™<-NULL
+ORIGINAL_DONG_DATA_ALL$ë™<-NULL
 
-JUNGGYE_DONG_DATA_ALL<-read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(ÆÇ±³).csv",header=TRUE)
-JUNGGYE_DONG_DATA_ALL$µ¿<-NULL
+JUNGGYE_DONG_DATA_ALL<-read.csv("ë™_ë°ì´í„°_ì¢…í•©(íŒêµ).csv",header=TRUE)
+JUNGGYE_DONG_DATA_ALL$ë™<-NULL
 
-######################## 1.³ªÀÌºê º£ÀÌÁö¾È ########################
+######################## 1.ë‚˜ì´ë¸Œ ë² ì´ì§€ì•ˆ ########################
 install.packages("e1071")
 library(e1071)
 
-#¸ğµ¨ »ı¼º 
+#ëª¨ë¸ ìƒì„± 
 nb_model <- naiveBayes(norm_dong_train, norm_dong_train$label, laplace = 1) 
 nb_pred <- predict(nb_model, norm_dong_test, type="class") 
 nb_pred2 <- naiveBayes.predict(nb_mode, norm_dong_test, type="class")
 
-#°á°ú(1) - ÀûÇÕµµ 
+#ê²°ê³¼(1) - ì í•©ë„ 
 nb_result<-cbind(norm_dong_test, norm_dong_test$label, nb_pred)
 acc<-prop.table(table(nb_pred, norm_dong_test$label))
 acc
 
-#°á°ú(2) - Cross Table
+#ê²°ê³¼(2) - Cross Table
 install.packages("gmodels")
 library(gmodels)
 CrossTable(x=norm_dong_test$label, y=nb_pred, prop.chisq=FALSE)
 
-#°á°ú(3) - ºĞ·ù±â¿¡ ÀûÇÕ½ÃÅ² ¶óº§ 
+#ê²°ê³¼(3) - ë¶„ë¥˜ê¸°ì— ì í•©ì‹œí‚¨ ë¼ë²¨ 
 nb_pred
 label_n <- data.frame(nb_pred)
-label_n[,1] <- dong_test$µ¿ 
+label_n[,1] <- dong_test$ë™ 
 label_n[,2] <- data.frame(nb_pred)
-#csvÆÄÀÏ·Î ÀúÀå 
-write.csv(label_n, "D:/01 À±ÁÖ/2021-1/µ¥ÀÌÅÍ¸¶ÀÌ´×/¹ßÇ¥/03 rÄÚµå/label_naiveBayes(75).csv")
+#csvíŒŒì¼ë¡œ ì €ì¥ 
+write.csv(label_n, "C:/User/users/label_naiveBayes(75).csv")
 
 
 
@@ -241,17 +241,17 @@ library(adabag)
 subway.adaboost <- boosting(label~.,data=norm_dong_train[], mfinal=10, control=rpart.control(maxdepth=10))
 subway.predboosting <- predict.boosting(subway.adaboost, newdata=norm_dong_test[]) 
 
-#°á°ú(1) - ÀûÇÕµµ 
+#ê²°ê³¼(1) - ì í•©ë„ 
 1-subway.predboosting$error
 
-#°á°ú(2) - ºĞ·ù±â¿¡ ÀûÇÕ½ÃÅ² ¶óº§ 
+#ê²°ê³¼(2) - ë¶„ë¥˜ê¸°ì— ì í•©ì‹œí‚¨ ë¼ë²¨ 
 label_boo <- data.frame(subway.predboosting$class)
-label_boo[,1] <- dong_test$µ¿ 
+label_boo[,1] <- dong_test$ë™ 
 label_boo[,2] <- data.frame(subway.predboosting$class)
-#csvÆÄÀÏ·Î ÀúÀå 
-write.csv(label_boo, "D:/01 À±ÁÖ/2021-1/µ¥ÀÌÅÍ¸¶ÀÌ´×/¹ßÇ¥/03 rÄÚµå/label_boosting(75).csv")
+#csvíŒŒì¼ë¡œ ì €ì¥ 
+write.csv(label_boo, "C:/User/users/label_boosting(75).csv")
 
-#for¹® ÀÌ¿ë 
+#forë¬¸ ì´ìš© 
 result_boo<-0
 for(i in 1:30)
 {
@@ -270,17 +270,17 @@ library(adabag)
 subway.bagging <- bagging(label~., data=norm_dong_train[], mfinal=10, control=rpart.control(maxdepth=13))
 subway.predbagging <- predict.bagging(subway.bagging, newdata=norm_dong_test[])
 
-#°á°ú(1) - ÀûÇÕµµ 
+#ê²°ê³¼(1) - ì í•©ë„ 
 1-subway.predbagging$error
 
-#°á°ú(2) - ºĞ·ù±â¿¡ ÀûÇÕ½ÃÅ² ¶óº§ 
+#ê²°ê³¼(2) - ë¶„ë¥˜ê¸°ì— ì í•©ì‹œí‚¨ ë¼ë²¨ 
 label_bag <- data.frame(subway.predbagging$class)
-label_bag[,1] <- dong_test$µ¿ 
+label_bag[,1] <- dong_test$ë™ 
 label_bag[,2] <- data.frame(subway.predbagging$class)
-#csvÆÄÀÏ·Î ÀúÀå 
-write.csv(label_bag, "D:/01 À±ÁÖ/2021-1/µ¥ÀÌÅÍ¸¶ÀÌ´×/¹ßÇ¥/03 rÄÚµå/label_bagging(75).csv")
+#csvíŒŒì¼ë¡œ ì €ì¥ 
+write.csv(label_bag, "C:/User/users/label_bagging(75).csv")
 
-#for¹® ÀÌ¿ë
+#forë¬¸ ì´ìš©
 result_bag<-0
 for (i in 1:30)
 {
@@ -294,29 +294,29 @@ max(result_bag)
 
 
 ######################## 4.cart tree ########################
-#cart ¾Ë°í¸®Áò Áö¿ø
-install.packages("rpart") #¿¡·¯ ¶ß¸é No Å¬¸¯ 
+#cart ì•Œê³ ë¦¬ì¦˜ ì§€ì›
+install.packages("rpart") #ì—ëŸ¬ ëœ¨ë©´ No í´ë¦­ 
 library(rpart)
-#ÀÇ»ç°áÁ¤ Æ®¸® ±×·¡ÇÁ ±×¸®±â
+#ì˜ì‚¬ê²°ì • íŠ¸ë¦¬ ê·¸ë˜í”„ ê·¸ë¦¬ê¸°
 install.packages("rattle")
 library(rattle)
 
-#cart ¸ğµ¨ »ı¼º
+#cart ëª¨ë¸ ìƒì„±
 cart_model <- rpart(norm_dong_train$label~.,data = norm_dong_train[-1],
                     method = "class", control = rpart.control(cp=0.001,minsplit = 2))
 
-#Ãâ·Â (Â¡±×·´°Ô ³ª¿À´Â ±×·¡ÇÁ)
+#ì¶œë ¥ (ì§•ê·¸ëŸ½ê²Œ ë‚˜ì˜¤ëŠ” ê·¸ë˜í”„)
 plot(cart_model)
 text(cart_model)
 
-#cp°ª Ãâ·Â
-plotcp(cart_model)    #cp°¡ °¡Àå ³·Àº °ªÀÌ 0.065·Î ³ª¿È
+#cpê°’ ì¶œë ¥
+plotcp(cart_model)    #cpê°€ ê°€ì¥ ë‚®ì€ ê°’ì´ 0.065ë¡œ ë‚˜ì˜´
 printcp(cart_model)
 
-#°¡ÁöÄ¡±â ÁøÇà
+#ê°€ì§€ì¹˜ê¸° ì§„í–‰
 ptree <- prune(cart_model, cp=0.01)
 plot(ptree)
-text(ptree, cex=0.55) #cex: ±ÛÀÚÅ©±â 
+text(ptree, cex=0.55) #cex: ê¸€ìí¬ê¸° 
 print(ptree)
 
 ptree2 <- prune(cart_model, cp=0.1712)
@@ -328,22 +328,22 @@ plot(ptree3)
 text(ptree3)
 
 
-#¿¹ÃøÇÏ±â ÁøÇà (test data¸¦ ÀÌ¿ëÇÏ¿© Á¤È®µµ È®ÀÎ)
-#21~31ÄÚµå ½ÇÇà ÇÊ¿ä 
+#ì˜ˆì¸¡í•˜ê¸° ì§„í–‰ (test dataë¥¼ ì´ìš©í•˜ì—¬ ì •í™•ë„ í™•ì¸)
+#21~31ì½”ë“œ ì‹¤í–‰ í•„ìš” 
 pdata<-predict(ptree,subway.test,type = "class")
 pdata2<-predict(ptree2,subway.test,type = "class")
 pdata3<-predict(ptree3,subway.test,type = "class")
 pdata2
 
-#Á¤È®µµ ÃøÁ¤ - ´Ù 0 ³ª¿È.. 
+#ì •í™•ë„ ì¸¡ì • - ë‹¤ 0 ë‚˜ì˜´.. 
 acc <- sum(subway.testLabels==pdata)/length(pdata)
 acc2 <- sum(subway.testLabels==pdata2)/length(pdata2)
 acc3 <- sum(subway.testLabels==pdata3)/length(pdata3)
 acc
 table(pdata, subway.testLabels)
 
-#ºĞ·ù±â¹ı -> ±×¸²À¸·Î µµ½ÄÈ­
-#ÀÇ»ç°áÁ¤ Æ®¸® ¸ğµ¨À» ¸¸µé¾îÁÖ´Â ÇÔ¼ö
+#ë¶„ë¥˜ê¸°ë²• -> ê·¸ë¦¼ìœ¼ë¡œ ë„ì‹í™”
+#ì˜ì‚¬ê²°ì • íŠ¸ë¦¬ ëª¨ë¸ì„ ë§Œë“¤ì–´ì£¼ëŠ” í•¨ìˆ˜
 install.packages("rpart.plot")
 library(rpart.plot)
 
@@ -352,37 +352,37 @@ fancyRpartPlot(cart_model)
 
 
 
-######################## Å¬·¯½ºÅÍ¸µ ºĞ¼® (¼Ó¼º °£ ºñ±³ºĞ¼®) ########################
-#µ¥ÀÌÅÍ »êÁ¡µµ ¶óÀÌºê·¯¸® 
+######################## í´ëŸ¬ìŠ¤í„°ë§ ë¶„ì„ (ì†ì„± ê°„ ë¹„êµë¶„ì„) ########################
+#ë°ì´í„° ì‚°ì ë„ ë¼ì´ë¸ŒëŸ¬ë¦¬ 
 install.packages("ggvis")
 library(ggvis)
 
 install.packages("ggplot2")
 library(ggplot2)
 
-#Á¤±ÔÈ­ ´Ù½Ã (3-4ÁÙ Á¦¿Ü)
-dong_data <- read.csv("µ¿_µ¥ÀÌÅÍ_Á¾ÇÕ(400).csv", header=TRUE)
+#ì •ê·œí™” ë‹¤ì‹œ (3-4ì¤„ ì œì™¸)
+dong_data <- read.csv("ë™_ë°ì´í„°_ì¢…í•©(400).csv", header=TRUE)
 norm_dong <- dong_data
 norm_dong[,c(-1,-2)] <- as.data.frame(lapply(norm_dong[,c(-1,-2)], normalize))
 
-ggplot(data=norm_dong, aes(x=µ¿, y=»ó±Ç¿ù¼Òµæ±İ¾×, color=label))+geom_point() + ggtitle("µ¿º° »ó±Ç¿ù¼Òµæ±İ¾×") 
-ggplot(data=norm_dong, aes(x=µ¿, y=¸éÀû, color=label)) + geom_point() + ggtitle("µ¿º° ¸éÀû")
-ggplot(norm_dong, aes(x=µ¿, y=°¡±¸¼ö, color=label)) + geom_point() + ggtitle("µ¿º° °¡±¸¼ö")
-ggplot(norm_dong, aes(x=µ¿, y=ÀÎ±¸, color=label)) + geom_point()  + ggtitle("µ¿º° ÀÎ±¸")
+ggplot(data=norm_dong, aes(x=ë™, y=ìƒê¶Œì›”ì†Œë“ê¸ˆì•¡, color=label))+geom_point() + ggtitle("ë™ë³„ ìƒê¶Œì›”ì†Œë“ê¸ˆì•¡") 
+ggplot(data=norm_dong, aes(x=ë™, y=ë©´ì , color=label)) + geom_point() + ggtitle("ë™ë³„ ë©´ì ")
+ggplot(norm_dong, aes(x=ë™, y=ê°€êµ¬ìˆ˜, color=label)) + geom_point() + ggtitle("ë™ë³„ ê°€êµ¬ìˆ˜")
+ggplot(norm_dong, aes(x=ë™, y=ì¸êµ¬, color=label)) + geom_point()  + ggtitle("ë™ë³„ ì¸êµ¬")
 
-ggplot(norm_dong, aes(x=µ¿, y=ÀÎ±¸¹Ğµµ, color=label)) + geom_point()  + ggtitle("µ¿º° ÀÎ±¸¹Ğµµ")
-ggplot(norm_dong, aes(x=µ¿, y=»ç¾÷Ã¼, color=label)) + geom_point()  + ggtitle("µ¿º° »ç¾÷Ã¼")
-ggplot(norm_dong, aes(x=µ¿, y=À¯µ¿ÀÎ±¸.08., color=label)) + geom_point()  + ggtitle("µ¿º° À¯µ¿ÀÎ±¸(8½Ã)")
-ggplot(norm_dong, aes(x=µ¿, y=À¯µ¿ÀÎ±¸.19., color=label)) + geom_point()  + ggtitle("µ¿º° À¯µ¿ÀÎ±¸(19½Ã)")
-ggplot(norm_dong, aes(x=µ¿, y=ÀºÇà, color=label)) + geom_point()  + ggtitle("µ¿º° ÀºÇà")
-ggplot(norm_dong, aes(x=µ¿, y=ÁÖÂ÷Àå, color=label)) + geom_point()  + ggtitle("µ¿º° ÁÖÂ÷Àå")
+ggplot(norm_dong, aes(x=ë™, y=ì¸êµ¬ë°€ë„, color=label)) + geom_point()  + ggtitle("ë™ë³„ ì¸êµ¬ë°€ë„")
+ggplot(norm_dong, aes(x=ë™, y=ì‚¬ì—…ì²´, color=label)) + geom_point()  + ggtitle("ë™ë³„ ì‚¬ì—…ì²´")
+ggplot(norm_dong, aes(x=ë™, y=ìœ ë™ì¸êµ¬.08., color=label)) + geom_point()  + ggtitle("ë™ë³„ ìœ ë™ì¸êµ¬(8ì‹œ)")
+ggplot(norm_dong, aes(x=ë™, y=ìœ ë™ì¸êµ¬.19., color=label)) + geom_point()  + ggtitle("ë™ë³„ ìœ ë™ì¸êµ¬(19ì‹œ)")
+ggplot(norm_dong, aes(x=ë™, y=ì€í–‰, color=label)) + geom_point()  + ggtitle("ë™ë³„ ì€í–‰")
+ggplot(norm_dong, aes(x=ë™, y=ì£¼ì°¨ì¥, color=label)) + geom_point()  + ggtitle("ë™ë³„ ì£¼ì°¨ì¥")
 
 
-# µ¥ÀÌÅÍ »êÁ¡µµ 
-clustered_1st_raw_data<-read.csv("Å¬·¯½ºÅÍ¸µ1Â÷_°á°ú.csv",header=TRUE)
+# ë°ì´í„° ì‚°ì ë„ 
+clustered_1st_raw_data<-read.csv("í´ëŸ¬ìŠ¤í„°ë§1ì°¨_ê²°ê³¼.csv",header=TRUE)
 
 p<-ggvis(data = clustered_1st_raw_data,
-         x=~±¸,y=~Å¬·¯½ºÅÍ,fill=~Å¬·¯½ºÅÍ)
+         x=~êµ¬,y=~í´ëŸ¬ìŠ¤í„°,fill=~í´ëŸ¬ìŠ¤í„°)
 layer_points(p)
 
 
